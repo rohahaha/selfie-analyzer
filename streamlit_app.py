@@ -5,6 +5,8 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from face_alignment import FaceAlignment, LandmarksType
 import numpy as np
+import json
+from streamlit.runtime.secrets import secrets
 
 # 거리 계산 함수
 def euclidean_distance(p1, p2):
@@ -128,7 +130,8 @@ def draw_landmark_overlay(image, landmarks, results):
 
 # ✅ 구글 시트 인증
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("selfie-analyze-770dd0771bc0.json", scope)
+info = json.loads(secrets["gcp_service_account"])
+creds = ServiceAccountCredentials.from_json_keyfile_dict(info, scope)
 client = gspread.authorize(creds)
 
 # ✅ 오늘 날짜 기준으로 시트 열기
@@ -196,7 +199,7 @@ if uploaded_file:
         st.error(f"얼굴 분석 모델을 불러오는 데 실패했습니다: {e}")
         st.stop()
 
-    # 이미지 분석 시작작
+    # 이미지 분석 시작
     image = Image.open(uploaded_file)
     st.image(image, caption="업로드된 셀카", use_column_width=True)
 
