@@ -130,9 +130,10 @@ def draw_landmark_overlay(image, landmarks, results):
 
 # ✅ 구글 시트 인증
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-info = json.loads(secrets["gcp_service_account"])
+info = json.loads(st.secrets["gcp_service_account"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(info, scope)
 client = gspread.authorize(creds)
+
 
 # ✅ 오늘 날짜 기준으로 시트 열기
 today = datetime.date.today().strftime("%Y-%m-%d")
